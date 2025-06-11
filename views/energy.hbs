@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Energy Logs</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-7xl mx-auto mt-6 p-6 bg-white rounded-xl shadow">
+    <h2 class="text-2xl font-semibold mb-4">Real-Time Energy Meter Logs</h2>
+
+    <div class="h-[400px] overflow-y-auto">
+      <table class="min-w-full border text-sm" id="log-table">
+        <thead class="bg-gray-200 sticky top-0">
+          <tr>
+            <th class="px-4 py-2 border">Timestamp</th>
+            <th class="px-4 py-2 border">Voltage (V)</th>
+            <th class="px-4 py-2 border">Current (A)</th>
+            <th class="px-4 py-2 border">Power (W)</th>
+            <th class="px-4 py-2 border">Energy (kWh)</th>
+            <th class="px-4 py-2 border">Frequency (Hz)</th>
+            <th class="px-4 py-2 border">Power Factor</th>
+          </tr>
+        </thead>
+        <tbody id="log-body">
+          <!-- New rows injected here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const socket = io();
+    const tbody = document.getElementById('log-body');
+
+    socket.on('new_log', (log) => {
+      const row = document.createElement('tr');
+      row.classList.add('hover:bg-gray-50');
+
+      row.innerHTML = `
+        <td class="border px-2 py-1">${log.timestamp}</td>
+        <td class="border px-2 py-1">${log.voltage}</td>
+        <td class="border px-2 py-1">${log.current}</td>
+        <td class="border px-2 py-1">${log.power}</td>
+        <td class="border px-2 py-1">${log.energy}</td>
+        <td class="border px-2 py-1">${log.frequency}</td>
+        <td class="border px-2 py-1">${log.power_factor}</td>
+      `;
+
+      tbody.prepend(row);
+
+      // Optional: limit to latest 50 logs
+      if (tbody.rows.length > 50) {
+        tbody.deleteRow(-1);
+      }
+    });
+  </script>
+</body>
+</html>
