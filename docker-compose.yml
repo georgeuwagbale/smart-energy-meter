@@ -23,7 +23,7 @@ services:
       DB_USERNAME: nest_user
       DB_PASSWORD: nest_password
       DB_NAME: energy
-      DB_HOST: localhost
+      DB_HOST: 44.226.145.213
     command: npm run dev
     volumes:
       - .:/app
